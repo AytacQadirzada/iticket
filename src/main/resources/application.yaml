@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: iticket
+  datasource:
+    url: jdbc:postgresql://localhost:5432/iticket_db
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: qadirzadaaytac@gmail.com
+    password: "aonn bqte mldb zbcc"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true

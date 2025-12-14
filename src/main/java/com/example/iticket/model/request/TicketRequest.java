@@ -12,4 +12,5 @@ public class TicketRequest {
     private double price;
     private String number;
     private Long seatId;
+    private Long productEventId;
 }

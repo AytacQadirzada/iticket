@@ -35,6 +35,10 @@ public class UserEntity {
     private boolean gender;
     private String country;
     private LocalDate dateOfBirth;
+
+    @OneToMany(mappedBy = "user")
+    private List<FavoritesEntity> favorites;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(nullable = false)
     private Set<String> roles;

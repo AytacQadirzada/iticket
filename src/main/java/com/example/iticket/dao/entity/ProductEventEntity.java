@@ -28,6 +28,9 @@ public class ProductEventEntity {
     @JoinColumn(name = "hall_id")
     private HallEntity hall;
 
+    @OneToMany(mappedBy = "productEvent")
+    private List<TicketEntity> tickets;
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

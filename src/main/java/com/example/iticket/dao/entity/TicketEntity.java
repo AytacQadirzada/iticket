@@ -26,6 +26,10 @@ public class TicketEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @ManyToOne
+    @JoinColumn(name = "product_event_id")
+    private ProductEventEntity productEvent;
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

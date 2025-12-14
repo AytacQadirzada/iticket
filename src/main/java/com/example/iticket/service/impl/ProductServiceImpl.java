@@ -32,9 +32,7 @@ public class ProductServiceImpl implements ProductService {
     private final SeatRepository seatRepository;
     private final TicketRepository ticketRepository;
     private final CategoryRepository categoryRepository;
-    private final TicketService ticketService;
     private final ProductEventMapper productEventMapper;
-    private final ProductEventService productEventService;
 
     @Override
     public List<ProductResponse> getAll() {
@@ -76,6 +74,7 @@ public class ProductServiceImpl implements ProductService {
 
             var sectors = sectorRepository.findByHallId(hall.getId());
 
+            var productEventEntity = productEventMapper.toEntity(productEventRequest);
             for (SectorEntity sector : sectors) {
                 var sectorPrice = productEventRequest.getSectorPrices().stream()
                         .filter(n -> n.getSectorId() == sector.getId())
@@ -89,13 +88,15 @@ public class ProductServiceImpl implements ProductService {
                     ticket.setPrice(sectorPrice);
                     ticket.setSeat(seat);
                     ticket.setNumber(UUID.randomUUID().toString());
+                    ticket.setProductEvent(productEventEntity);
                     ticketRepository.save(ticket);
                 }
             }
 
-            var productEventEntity = productEventMapper.toEntity(productEventRequest);
 
+            productEventEntity.setHall(hall);
             productEventEntity.setProduct(entity);
+
 
             productEvents.add(productEventEntity);
         }
@@ -122,5 +123,14 @@ public class ProductServiceImpl implements ProductService {
         entity.setId(id);
         repository.save(entity);
         log.info("ActionLog.update.end id: {} ", id);
+    }
+
+    @Override
+    public List<ProductResponse> getAllByCategory(Long categoryId){
+        log.info("ActionLog.getAllByCategory.start categoryId: {} ", categoryId);
+        List<ProductEntity> entities = repository.GetAllByCategory(categoryId);
+        var responses = entities.stream().map(mapper::toResponse).toList();
+        log.info("ActionLog.getAllByCategory.end categoryId: {} ", categoryId);
+        return responses;
     }
 }

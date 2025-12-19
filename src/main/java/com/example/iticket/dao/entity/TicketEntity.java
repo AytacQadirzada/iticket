@@ -26,6 +26,8 @@ public class TicketEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    private boolean isBooked;
+
     @ManyToOne
     @JoinColumn(name = "product_event_id")
     private ProductEventEntity productEvent;

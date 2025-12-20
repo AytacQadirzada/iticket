@@ -3,6 +3,7 @@ package com.example.iticket.controller;
 import com.example.iticket.model.request.SectorRequest;
 import com.example.iticket.model.response.SectorResponse;
 import com.example.iticket.service.concret.SectorService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/sector")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class SectorController {
     private final SectorService service;
 

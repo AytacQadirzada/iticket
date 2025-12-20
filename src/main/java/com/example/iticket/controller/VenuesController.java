@@ -6,6 +6,7 @@ import com.example.iticket.model.response.CategoryResponse;
 import com.example.iticket.model.response.VenuesResponse;
 import com.example.iticket.service.concret.CategoryService;
 import com.example.iticket.service.concret.VenuesService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/venues")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class VenuesController {
     private final VenuesService venuesService;
 

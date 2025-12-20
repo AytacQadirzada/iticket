@@ -5,14 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class HallResponse {
-    private Long id;
-    private String name;
-    private List<SectorResponse> sectors;
+public class BasketItemResponse {
+    private ProductResponse product;
+    private Integer quantity;
+    private Double price;
 }

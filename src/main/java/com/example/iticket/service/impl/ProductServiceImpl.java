@@ -27,9 +27,7 @@ import java.util.UUID;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
     private final ProductMapper mapper;
-    private final HallRepository hallRepository;
     private final SectorRepository sectorRepository;
-    private final SeatRepository seatRepository;
     private final TicketRepository ticketRepository;
     private final CategoryRepository categoryRepository;
     private final ProductEventMapper productEventMapper;
@@ -68,11 +66,11 @@ public class ProductServiceImpl implements ProductService {
         List<ProductEventEntity> productEvents = new ArrayList<>();
 
         for (ProductEventRequest productEventRequest : request.getProductEvents()) {
+            var hallId = sectorRepository.findById(productEventRequest.getSectorPrices().get(0).getSectorId()).get().getHall().getId();
 
-            var hall = hallRepository.findById(productEventRequest.getHallId()).orElse(null);
-            assert hall != null;
 
-            var sectors = sectorRepository.findByHallId(hall.getId());
+
+            var sectors = sectorRepository.findByHallId(hallId);
 
             var productEventEntity = productEventMapper.toEntity(productEventRequest);
             for (SectorEntity sector : sectors) {
@@ -81,20 +79,42 @@ public class ProductServiceImpl implements ProductService {
                         .findFirst()
                         .orElseThrow()
                         .getPrice();
-
-                var seats = seatRepository.findBySectorId(sector.getId());
-                for (SeatEntity seat : seats) {
-                    var ticket = new TicketEntity();
-                    ticket.setPrice(sectorPrice);
-                    ticket.setSeat(seat);
-                    ticket.setNumber(UUID.randomUUID().toString());
-                    ticket.setProductEvent(productEventEntity);
-                    ticketRepository.save(ticket);
+                if(sector.getRowNumber() !=0 && sector.getColumnNumber() !=0) {
+                        for (int i = 0; i < sector.getColumnNumber(); i++) {
+                        for (int j=0; j<sector.getRowNumber(); j++) {
+                            var ticket = new TicketEntity();
+                            ticket.setPrice(sectorPrice);
+                            ticket.setColumnNumber((long) (i + 1));
+                            ticket.setRowNumber((long) (j + 1));
+                            ticket.setNumber(UUID.randomUUID().toString());
+                            ticket.setProductEvent(productEventEntity);
+                            ticketRepository.save(ticket);
+                        }
+                    }
+                } else if (sector.getRowNumber() == 0 && sector.getColumnNumber() == 0 && sector.getCapacity() != 0){ {
+                    for (int i = 0; i < sector.getCapacity(); i++) {
+                        var ticket = new TicketEntity();
+                        ticket.setPrice(sectorPrice);
+                        ticket.setNumber(UUID.randomUUID().toString());
+                        ticket.setProductEvent(productEventEntity);
+                        ticketRepository.save(ticket);
+                    }
                 }
+
+                }
+
+//                for (SeatEntity seat : seats) {
+//                    var ticket = new TicketEntity();
+//                    ticket.setPrice(sectorPrice);
+////                    ticket.setSeat(seat);
+//                    ticket.setNumber(UUID.randomUUID().toString());
+//                    ticket.setProductEvent(productEventEntity);
+//                    ticketRepository.save(ticket);
+//                }
             }
 
 
-            productEventEntity.setHall(hall);
+//            productEventEntity.setHall(hall);
             productEventEntity.setProduct(entity);
 
 
@@ -133,7 +153,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getAllByCategory(Long categoryId) {
         log.info("ActionLog.getAllByCategory.start categoryId: {} ", categoryId);
-        List<ProductEntity> entities = repository.GetAllByCategory(categoryId);
+        List<ProductEntity> entities = repository.getAllByCategoryId(categoryId);
         var responses = entities.stream().map(mapper::toResponse).toList();
         log.info("ActionLog.getAllByCategory.end categoryId: {} ", categoryId);
         return responses;

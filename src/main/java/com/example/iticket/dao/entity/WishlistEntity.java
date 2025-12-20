@@ -7,20 +7,20 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "favorites")
+@Table(name = "wishlist")
 @Getter
 @Setter
-
-public class FavoritesEntity {
+public class WishlistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @OneToOne
     @JoinColumn(name = "user_id")
-    private Long userId;
+    private UserEntity user;
 
     @ManyToMany
-    @JoinTable(name = "favorites_products", joinColumns = @JoinColumn(name = "favorites_id"), inverseJoinColumns = @JoinColumn(name = "products_id"))
+    @JoinTable(name = "wishlist_products", joinColumns = @JoinColumn(name = "wishlist_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<ProductEntity> Products;
 
 }

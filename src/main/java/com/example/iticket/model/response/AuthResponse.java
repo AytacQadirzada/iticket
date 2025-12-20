@@ -2,14 +2,16 @@ package com.example.iticket.model.response;
 
 import com.example.iticket.enums.Role;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AuthResponse {
     private Long id;
     private String accessToken;

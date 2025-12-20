@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class HallResponse {
-    private Long id;
-    private String name;
-    private List<SectorResponse> sectors;
+public class BasketResponse {
+    private List<BasketItemResponse> basketItems;
+    private Double totalPrice;
+    private Integer totalQuantity;
 }

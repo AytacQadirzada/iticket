@@ -24,9 +24,9 @@ public class ProductEventEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity product;
 
-    @ManyToOne
-    @JoinColumn(name = "hall_id")
-    private HallEntity hall;
+//    @ManyToOne
+//    @JoinColumn(name = "hall_id")
+//    private HallEntity hall;
 
     @OneToMany(mappedBy = "productEvent")
     private List<TicketEntity> tickets;

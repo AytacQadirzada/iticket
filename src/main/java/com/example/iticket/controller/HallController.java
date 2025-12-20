@@ -3,6 +3,7 @@ package com.example.iticket.controller;
 import com.example.iticket.model.request.HallRequest;
 import com.example.iticket.model.response.HallResponse;
 import com.example.iticket.service.concret.HallService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/hall")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class HallController {
     private final HallService service;
 

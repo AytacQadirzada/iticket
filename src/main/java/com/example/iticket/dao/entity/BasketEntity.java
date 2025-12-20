@@ -3,33 +3,33 @@ package com.example.iticket.dao.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.catalina.User;
 
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "seats")
-@Setter
+@Table(name = "baskets")
 @Getter
-public class SeatEntity {
+@Setter
+public class BasketEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String rowNumber;
-    private String seatNumber;
+    private double TotalPrice;
 
-    @OneToMany(mappedBy = "seat")
-    private List<TicketEntity> ticket;
+    @OneToMany(mappedBy = "basket")
+    private List<BasketItemEntity> BasketItems;
 
-    @ManyToOne
-    @JoinColumn(name = "sector_id")
-    private SectorEntity sector;
-    
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        SeatEntity that = (SeatEntity) o;
+        BasketEntity that = (BasketEntity) o;
         return Objects.equals(id, that.id);
     }
 

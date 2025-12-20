@@ -32,7 +32,7 @@ public class CardEntity {
     @Column(name = "expiry_year", nullable = false)
     private Integer expiryYear;
 
-    @Column(name = "balance", nullable = false, precision = 12, scale = 2)
+    @Column(name = "balance", nullable = false)
     private BigDecimal balance;
 
     @Column(name = "status", nullable = false)

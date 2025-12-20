@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class HallRequest {
     private String name;
     private Long venueId;

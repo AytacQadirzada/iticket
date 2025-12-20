@@ -110,7 +110,12 @@ public class ProductServiceImpl implements ProductService {
         log.info("ActionLog.create.end name: {}", request.getTitle());
     }
 
-    @Override public void delete(Long id) { log.info("ActionLog.delete.start id: {} ", id); repository.deleteById(id); log.info("ActionLog.delete.end id: {} ", id); }
+    @Override
+    public void delete(Long id) {
+        log.info("ActionLog.delete.start id: {} ", id);
+        repository.deleteById(id);
+        log.info("ActionLog.delete.end id: {} ", id);
+    }
 
     @Override
     public void update(Long id, ProductRequest request) {
@@ -126,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getAllByCategory(Long categoryId){
+    public List<ProductResponse> getAllByCategory(Long categoryId) {
         log.info("ActionLog.getAllByCategory.start categoryId: {} ", categoryId);
         List<ProductEntity> entities = repository.GetAllByCategory(categoryId);
         var responses = entities.stream().map(mapper::toResponse).toList();

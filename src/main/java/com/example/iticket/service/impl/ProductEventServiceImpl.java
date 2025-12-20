@@ -52,12 +52,12 @@ public class ProductEventServiceImpl implements ProductEventService {
 
     @Override
     public void create(ProductEventRequest request) {
-        log.info("ActionLog.create.start name: {} ", request.getEventName());
-        var  entity = mapper.toEntity(request);
-        entity.setHall(hallRepository.findById(request.getHallId()).orElse(null));
-//        entity.setProduct(productRepository.findById(request.getProductId()).orElse(null));
-        repository.save(entity);
-        log.info("ActionLog.create.end name: {} ", entity.getEventName());
+//        log.info("ActionLog.create.start name: {} ", request.getEventName());
+//        var  entity = mapper.toEntity(request);
+//        entity.setHall(hallRepository.findById(request.getHallId()).orElse(null));
+////        entity.setProduct(productRepository.findById(request.getProductId()).orElse(null));
+//        repository.save(entity);
+//        log.info("ActionLog.create.end name: {} ", entity.getEventName());
     }
 
     @Override

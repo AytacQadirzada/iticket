@@ -1,13 +1,11 @@
 package com.example.iticket.mapper;
 
-import com.example.iticket.dao.entity.TicketEntity;
-import com.example.iticket.model.response.TicketResponse;
+import com.example.iticket.dao.entity.BasketEntity;
+import com.example.iticket.model.response.BasketResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
-public interface TicketMapper {
-    TicketResponse toResponse(TicketEntity entity);
-
+public interface BasketMapper {
+    BasketResponse toResponse(BasketEntity entity);
 }

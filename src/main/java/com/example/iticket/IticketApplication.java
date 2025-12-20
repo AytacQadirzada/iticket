@@ -1,5 +1,6 @@
 package com.example.iticket;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

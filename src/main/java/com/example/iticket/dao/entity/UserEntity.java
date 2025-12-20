@@ -1,6 +1,5 @@
 package com.example.iticket.dao.entity;
 
-import com.example.iticket.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,8 +35,8 @@ public class UserEntity {
     private String country;
     private LocalDate dateOfBirth;
 
-    @OneToMany(mappedBy = "user")
-    private List<FavoritesEntity> favorites;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private WishlistEntity wishlist;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(nullable = false)
@@ -52,6 +51,10 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user")
     private List<TicketEntity> tickets;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private BasketEntity basket;
+
 
     @Override
     public boolean equals(Object o) {

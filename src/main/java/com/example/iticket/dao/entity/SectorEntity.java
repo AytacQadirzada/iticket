@@ -21,12 +21,19 @@ public class SectorEntity {
 
     private SectorClassification sectorClassification;
 
+    private Long rowNumber;
+
+    private Long columnNumber;
+
+    private Long capacity;
+
     @ManyToOne
     @JoinColumn(name = "hall_id")
     private HallEntity hall;
 
     @OneToMany(mappedBy = "sector")
-    public List<SeatEntity> seats;
+    private List<TicketEntity> ticket;
+
     
     @Override
     public boolean equals(Object o) {

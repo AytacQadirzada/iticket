@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ProductRequest {
     private String bannerImage;
     private String posterImage;

@@ -1,8 +1,8 @@
 package com.example.iticket.controller;
 
-import com.example.iticket.model.request.TicketRequest;
 import com.example.iticket.model.response.TicketResponse;
 import com.example.iticket.service.concret.TicketService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/ticket")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class TicketController {
     private final TicketService service;
 
@@ -23,22 +24,6 @@ public class TicketController {
     @GetMapping("/{id}")
     public TicketResponse getById(@PathVariable Long id){
         return service.getById(id);
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody TicketRequest request){
-        service.create(request);
-    }
-
-    @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody TicketRequest request){
-        service.update(id,request);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteCategory(@PathVariable Long id){
-        service.delete(id);
     }
 
 }

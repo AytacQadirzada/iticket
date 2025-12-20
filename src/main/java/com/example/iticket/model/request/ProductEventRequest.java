@@ -8,13 +8,14 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ProductEventRequest {
     private String eventName;
     private double minPrice;
     private LocalDateTime eventDate;
-    private Long hallId;
+//    private Long hallId;
 //    private Long productId;
     private List<SectorPriceRequest> sectorPrices;
 

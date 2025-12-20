@@ -30,6 +30,10 @@ public class ProductEntity {
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
+    @ManyToMany
+    @JoinTable(name = "wishlist_products", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "wishlist_id"))
+    private List<WishlistEntity> wishlist;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductEventEntity> productEvents;
 

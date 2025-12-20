@@ -1,5 +1,7 @@
 package com.example.iticket.service.impl;
 
+import com.example.iticket.dao.entity.BasketEntity;
+import com.example.iticket.dao.entity.WishlistEntity;
 import com.example.iticket.dao.repository.UserRepository;
 import com.example.iticket.enums.Role;
 import com.example.iticket.exception.NotFoundException;
@@ -41,6 +43,12 @@ public class AuthServiceImpl implements AuthService {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         var user = userMapper.toEntity(request);
         user.setEmailVerified(false);
+        WishlistEntity wishlistEntity = new WishlistEntity();
+        BasketEntity basketEntity = new BasketEntity();
+        basketEntity.setUser(user);
+        wishlistEntity.setUser(user);
+        user.setWishlist(wishlistEntity);
+        user.setBasket(basketEntity);
         user.setRoles(Set.of(Role.ROLE_USER.name()));
         userRepository.save(user);
 

@@ -1,6 +1,5 @@
 package com.example.iticket.dao.repository;
 
-import com.example.iticket.dao.entity.SeatEntity;
 import com.example.iticket.dao.entity.SectorEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

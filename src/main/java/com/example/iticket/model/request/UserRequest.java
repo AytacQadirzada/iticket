@@ -1,14 +1,16 @@
 package com.example.iticket.model.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserRequest {
     private Long id;
     private String name;

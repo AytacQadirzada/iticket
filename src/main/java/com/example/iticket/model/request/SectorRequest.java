@@ -8,10 +8,14 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SectorRequest {
     private String name;
     private SectorClassification sectorClassification;
-    public Long hallId;
+    private Long hallId;
+    private Long rowNumber;
+    private Long columnNumber;
+    private Long capacity;
 }

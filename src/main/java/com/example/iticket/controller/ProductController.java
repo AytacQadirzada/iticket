@@ -3,6 +3,7 @@ package com.example.iticket.controller;
 import com.example.iticket.model.request.ProductRequest;
 import com.example.iticket.model.response.ProductResponse;
 import com.example.iticket.service.concret.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/product")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class ProductController {
     private final ProductService service;
 

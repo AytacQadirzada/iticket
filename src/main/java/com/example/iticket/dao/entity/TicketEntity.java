@@ -17,16 +17,18 @@ public class TicketEntity {
 
     private Double price;
     private String number;
+    private Long rowNumber;
+    private Long columnNumber;
+    private boolean isBooked;
 
     @ManyToOne
-    @JoinColumn(name = "seat_id")
-    private SeatEntity seat;
+    @JoinColumn(name = "sector_id")
+    private SectorEntity sector;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    private boolean isBooked;
 
     @ManyToOne
     @JoinColumn(name = "product_event_id")

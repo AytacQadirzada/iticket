@@ -25,8 +25,8 @@ public class HallEntity {
     @OneToMany(mappedBy = "hall")
     private List<SectorEntity> sectors;
 
-    @OneToMany(mappedBy = "hall")
-    private List<ProductEventEntity> productEvents;
+//    @OneToMany(mappedBy = "hall")
+//    private List<ProductEventEntity> productEvents;
 
     @ManyToOne
     @JoinColumn(name = "venue_id")

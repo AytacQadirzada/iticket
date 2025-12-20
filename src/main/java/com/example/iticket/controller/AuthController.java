@@ -26,26 +26,4 @@ public class AuthController {
     public AuthResponse login(@RequestParam String email, @RequestParam String password) {
         return authService.login(email, password);
     }
-
-    @PostMapping("/otp")
-    @PreAuthorize("hasRole('ADMIN')")
-    public void otp(@RequestParam String email) {
-        authService.generateOtp(email);
-    }
-
-    @PostMapping("/otp/verify")
-    public boolean verifyOtp(@RequestParam String email, @RequestParam String otp) {
-        return authService.verifyOtp(email, otp);
-    }
-
-    @PostMapping("/forgot-password/otp")
-    public void sendForgotPasswordOtp(@RequestParam String email){
-        authService.sendForgotPasswordOtp(email);
-    }
-
-
-    @PutMapping("/forgot-password/reset")
-    public void resetPassword(@RequestBody ResetPasswordRequest request){
-        authService.resetPassword(request);
-    }
 }

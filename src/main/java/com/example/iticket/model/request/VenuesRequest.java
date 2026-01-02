@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,4 +19,5 @@ public class VenuesRequest {
     private String phone;
     private String mapLat;
     private String mapLng;
+    private List<HallRequest> halls;
 }

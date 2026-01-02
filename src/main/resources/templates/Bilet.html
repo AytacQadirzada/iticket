@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Biletiniz</title>
+</head>
+<body style="margin:0; padding:0; background:#f4f4f4; font-family:Arial, sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+        <td align="center" style="padding:30px;">
+            <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:10px; overflow:hidden;">
+
+                <tr>
+                    <td style="background:#2c3e50; color:#ffffff; padding:20px; text-align:center;">
+                        <h1 style="margin:0;">🎫 BİLET</h1>
+                        <p style="margin:5px 0 0;">iticket-copy.az</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding:25px; color:#333;">
+                        <p>Bilet məlumatlarınız aşağıdadır:</p>
+
+                        <p><strong>🎤 Event:</strong> {{EventName}}</p>
+                        <p><strong>📍 Məkan:</strong> {{Venue}}</p>
+                        <p><strong>📍 Zal:</strong> {{Hall}}</p>
+                        <p><strong>Zona:</strong> {{Sector}}</p>
+                        <p><strong>📅 Tarix:</strong> {{EventDate}}</p>
+                        <p><strong>💺 Yer:</strong> {{Seat}}</p>
+                        <p><strong>Qiymət:</strong> {{Price}}</p>
+                        <p><strong>🔢 Bilet Kodu:</strong> {{TicketCode}}</p>
+
+                        <div style="text-align:center; margin-top:25px;">
+                            <img src="{{QrCodeUrl}}" alt="QR Code" />
+                            <p style="font-size:12px; color:#666;">
+                                Giriş üçün bu QR kodu göstərin
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="background:#ecf0f1; padding:15px; text-align:center; font-size:12px; color:#555;">
+                        © 2026 iticket-copy.az | Bütün hüquqlar qorunur
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

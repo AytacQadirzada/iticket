@@ -48,7 +48,13 @@ public class VenuesServiceImpl implements VenuesService {
     @Override
     public void createVenues(VenuesRequest venues) {
         log.info("ActionLog.createVenues.start name: {} ", venues.getName());
-        var  venuesEntity = venuesMapper.toEntity(venues);
+        var venuesEntity = venuesMapper.toEntity(venues);
+        for(var hall : venuesEntity.getHalls()){
+            hall.setVenue(venuesEntity);
+            for(var sector : hall.getSectors()){
+                sector.setHall(hall);
+            }
+        }
         venuesRepository.save(venuesEntity);
         log.info("ActionLog.createVenues.end name: {} ", venuesEntity.getName());
     }

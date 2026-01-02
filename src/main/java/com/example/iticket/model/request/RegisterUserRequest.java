@@ -14,12 +14,10 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class RegisterUserRequest {
-
     private String name;
     private String surname;
     private String email;
     private String password;
     private String phone;
     private boolean gender;
-    private Set<String> role;
 }

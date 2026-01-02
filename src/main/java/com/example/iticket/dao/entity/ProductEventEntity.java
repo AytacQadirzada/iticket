@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "productEvents")
+@Table(name = "product_events")
 @Setter
 @Getter
 public class ProductEventEntity {
@@ -28,7 +28,7 @@ public class ProductEventEntity {
 //    @JoinColumn(name = "hall_id")
 //    private HallEntity hall;
 
-    @OneToMany(mappedBy = "productEvent")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productEvent")
     private List<TicketEntity> tickets;
 
     @Override

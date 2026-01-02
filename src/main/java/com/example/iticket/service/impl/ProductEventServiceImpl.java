@@ -1,18 +1,13 @@
 package com.example.iticket.service.impl;
 
-import com.example.iticket.dao.entity.HallEntity;
 import com.example.iticket.dao.entity.ProductEventEntity;
 import com.example.iticket.dao.repository.HallRepository;
 import com.example.iticket.dao.repository.ProductEventRepository;
 import com.example.iticket.dao.repository.ProductRepository;
 import com.example.iticket.exception.NotFoundException;
-import com.example.iticket.mapper.HallMapper;
 import com.example.iticket.mapper.ProductEventMapper;
-import com.example.iticket.model.request.HallRequest;
 import com.example.iticket.model.request.ProductEventRequest;
-import com.example.iticket.model.response.HallResponse;
 import com.example.iticket.model.response.ProductEventResponse;
-import com.example.iticket.service.concret.HallService;
 import com.example.iticket.service.concret.ProductEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

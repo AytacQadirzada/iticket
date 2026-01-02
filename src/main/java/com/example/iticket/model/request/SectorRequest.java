@@ -14,7 +14,6 @@ import java.util.Objects;
 public class SectorRequest {
     private String name;
     private SectorClassification sectorClassification;
-    private Long hallId;
     private Long rowNumber;
     private Long columnNumber;
     private Long capacity;

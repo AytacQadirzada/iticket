@@ -22,7 +22,7 @@ public class HallEntity {
 //    @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "hall")
+    @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
     private List<SectorEntity> sectors;
 
 //    @OneToMany(mappedBy = "hall")

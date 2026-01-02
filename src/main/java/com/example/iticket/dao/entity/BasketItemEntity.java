@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "basket_items")
 @Getter
@@ -13,11 +15,10 @@ public class BasketItemEntity {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
     private int quantity;
-    private String ticketNumber;
-
-
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private TicketEntity tickets;
+    private double price;
     @ManyToOne
     @JoinColumn(name = "basket_id")
     private BasketEntity basket;
-    private Long productId;
 }

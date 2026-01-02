@@ -30,6 +30,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    //iyzico
+    implementation 'com.iyzipay:iyzipay-java:2.0.140'
+
     //swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6' // Use the latest stable version
     //liquibase

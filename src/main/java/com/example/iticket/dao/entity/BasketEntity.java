@@ -19,7 +19,7 @@ public class BasketEntity {
 
     private double TotalPrice;
 
-    @OneToMany(mappedBy = "basket")
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
     private List<BasketItemEntity> BasketItems;
 
     @OneToOne

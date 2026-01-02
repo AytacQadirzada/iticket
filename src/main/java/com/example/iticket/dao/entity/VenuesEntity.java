@@ -28,7 +28,7 @@ public class VenuesEntity {
     @Column(nullable = false)
     private String mapLng;
 
-    @OneToMany(mappedBy = "venue")
+    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL)
     private List<HallEntity> halls;
 
     @Override

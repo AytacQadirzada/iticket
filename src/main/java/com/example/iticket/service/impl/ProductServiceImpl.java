@@ -66,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductEventEntity> productEvents = new ArrayList<>();
 
         for (ProductEventRequest productEventRequest : request.getProductEvents()) {
-            var hallId = sectorRepository.findById(productEventRequest.getSectorPrices().get(0).getSectorId()).get().getHall().getId();
+            Long hallId = sectorRepository.findById(productEventRequest.getSectorPrices().get(0).getSectorId()).get().getHall().getId();
 
 
 
@@ -89,6 +89,7 @@ public class ProductServiceImpl implements ProductService {
                             ticket.setNumber(UUID.randomUUID().toString());
                             ticket.setProductEvent(productEventEntity);
                             ticketRepository.save(ticket);
+                            ticket.setSector(sector);
                         }
                     }
                 } else if (sector.getRowNumber() == 0 && sector.getColumnNumber() == 0 && sector.getCapacity() != 0){ {
@@ -97,20 +98,12 @@ public class ProductServiceImpl implements ProductService {
                         ticket.setPrice(sectorPrice);
                         ticket.setNumber(UUID.randomUUID().toString());
                         ticket.setProductEvent(productEventEntity);
+                        ticket.setSector(sector);
                         ticketRepository.save(ticket);
                     }
                 }
 
                 }
-
-//                for (SeatEntity seat : seats) {
-//                    var ticket = new TicketEntity();
-//                    ticket.setPrice(sectorPrice);
-////                    ticket.setSeat(seat);
-//                    ticket.setNumber(UUID.randomUUID().toString());
-//                    ticket.setProductEvent(productEventEntity);
-//                    ticketRepository.save(ticket);
-//                }
             }
 
 

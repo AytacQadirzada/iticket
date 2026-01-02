@@ -21,3 +21,7 @@ spring:
           starttls:
             enable: true
             required: true
+  iyzico:
+    api-key: sandbox-oAr3fk6dpzUDMYCjS4S0aoLhlnhXzPPL
+    secret-key: sandbox-mrvK4r9O7jdQyonzVysdX1BB2oixl6A5
+    base-url: https://sandbox-api.iyzipay.com

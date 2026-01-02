@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -29,6 +30,11 @@ public class TicketEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+
+    private String paymentId;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<BasketItemEntity> basketItems;
 
     @ManyToOne
     @JoinColumn(name = "product_event_id")

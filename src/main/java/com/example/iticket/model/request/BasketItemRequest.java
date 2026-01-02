@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class BasketItemRequest {
-    private Long productId;
+    private Long userId;
+    private Long productEventId;
     private Integer quantity;
+    private Long sectorId;
     private String ticketNumber;
 }

@@ -20,13 +20,9 @@ public class ProductEventEntity {
     private double minPrice;
     private LocalDateTime eventDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private ProductEntity product;
-
-//    @ManyToOne
-//    @JoinColumn(name = "hall_id")
-//    private HallEntity hall;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productEvent")
     private List<TicketEntity> tickets;

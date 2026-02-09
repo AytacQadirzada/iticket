@@ -36,7 +36,7 @@ public class TicketEntity {
     @OneToMany(cascade = CascadeType.ALL)
     private List<BasketItemEntity> basketItems;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_event_id")
     private ProductEventEntity productEvent;
 

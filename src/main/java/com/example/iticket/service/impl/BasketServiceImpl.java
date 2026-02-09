@@ -11,10 +11,12 @@ import com.example.iticket.dao.repository.UserRepository;
 import com.example.iticket.exception.NotFoundException;
 import com.example.iticket.mapper.BasketItemMapper;
 import com.example.iticket.mapper.BasketMapper;
+import com.example.iticket.mapper.ProductEventMapper;
 import com.example.iticket.model.request.BasketItemRequest;
 import com.example.iticket.model.request.CardRequest;
 import com.example.iticket.model.response.BasketResponse;
 import com.example.iticket.model.response.IyzicoPaymentResult;
+import com.example.iticket.model.response.ProductEventResponse;
 import com.example.iticket.model.response.TicketMailResponse;
 import com.example.iticket.service.concret.BasketService;
 import com.example.iticket.service.concret.IyzicoPaymentService;
@@ -40,6 +42,7 @@ public class BasketServiceImpl implements BasketService {
     private final TicketRepository ticketRepository;
     private final IyzicoPaymentService iyzicoPaymentService;
     private final MailService mailService;
+    private final ProductEventMapper productEventMapper;
 
     @Override
     public void addItem(BasketItemRequest request) {
@@ -118,9 +121,16 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public BasketResponse getBasket(Long userId) {
         log.info("BasketSerice.getById.start userId: {}", userId);
-        var basketId = userRepository.findById(userId).get().getWishlist().getId();
-        var basketEntity = basketRepository.findById(basketId).get();
+        var basketId = userRepository.findById(userId).get().getBasket().getId();
+        BasketEntity basketEntity = basketRepository.findById(basketId).get();
+
         var response = mapper.toResponse(basketEntity);
+        for(var item : response.getBasketItems()){
+            for(var ticket : basketEntity.getBasketItems()){
+                ProductEventResponse productEventResponse = productEventMapper.toResponse(ticket.getTickets().getProductEvent());
+                item.setProduct(productEventResponse);
+            }
+        }
         log.info("BasketSerice.getById.end userId: {}", userId);
         return response;
     }
@@ -149,7 +159,6 @@ public class BasketServiceImpl implements BasketService {
             );
         }
 
-        // 2️⃣ Ticket-ləri update et
         for (BasketItemEntity item : basket.getBasketItems()) {
 
             TicketEntity ticket = item.getTickets();
@@ -173,7 +182,6 @@ public class BasketServiceImpl implements BasketService {
             mailService.sendTicketEmail(user.getEmail(), mail);
         }
 
-        // 3️⃣ Basket-i təmizlə
         basket.getBasketItems().clear();
         basket.setTotalPrice(0);
 

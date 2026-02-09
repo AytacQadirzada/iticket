@@ -33,6 +33,9 @@ dependencies {
     //iyzico
     implementation 'com.iyzipay:iyzipay-java:2.0.140'
 
+    //minio
+    implementation("io.minio:minio:8.6.0")
+
     //swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6' // Use the latest stable version
     //liquibase

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class BasketItemResponse {
-    private ProductResponse product;
+    private ProductEventResponse product;
     private Integer quantity;
     private Double price;
 }

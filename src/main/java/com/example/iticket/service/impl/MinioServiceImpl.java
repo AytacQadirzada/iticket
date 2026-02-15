@@ -7,6 +7,7 @@ import io.minio.PutObjectArgs;
 import io.minio.errors.*;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MinioServiceImpl implements MinioService {
@@ -25,8 +27,8 @@ public class MinioServiceImpl implements MinioService {
     @Value("${minio.bucket}")
     private String bucketName;
 
-    // Upload metodu
     public String upload(MultipartFile file){
+        log.info("ActionLog.upload.start fileName: {} ", file.getOriginalFilename());
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
         try {
@@ -44,18 +46,20 @@ public class MinioServiceImpl implements MinioService {
             throw new RuntimeException(e);
         }
 
+        log.info("ActionLog.upload.end fileName: {} ", fileName);
         return fileName;
     }
 
-    // Presigned URL yaratmaq
     public String getPresignedUrl(String fileName) {
+        log.info("ActionLog.getPresignedUrl.start fileName: {} ", fileName);
         try {
+        log.info("ActionLog.getPresignedUrl.end fileName: {} ", fileName);
             return minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
                     .method(Method.GET)
                     .bucket(bucketName)
                     .object(fileName)
-                    .expiry(60 * 60) // URL 1 saat aktiv olur
+                    .expiry(60 * 60)
                     .build()
             );
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |

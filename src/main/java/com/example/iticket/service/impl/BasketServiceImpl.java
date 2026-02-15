@@ -1,9 +1,6 @@
 package com.example.iticket.service.impl;
 
-import com.example.iticket.dao.entity.BasketEntity;
-import com.example.iticket.dao.entity.BasketItemEntity;
-import com.example.iticket.dao.entity.TicketEntity;
-import com.example.iticket.dao.entity.UserEntity;
+import com.example.iticket.dao.entity.*;
 import com.example.iticket.dao.repository.BasketItemRepository;
 import com.example.iticket.dao.repository.BasketRepository;
 import com.example.iticket.dao.repository.TicketRepository;
@@ -79,10 +76,7 @@ public class BasketServiceImpl implements BasketService {
 
                         BasketItemEntity basketItem = new BasketItemEntity();
                         basketItem.setTickets(ticketItem);
-                        // if BasketItemEntity stores price separately; otherwise you can omit this line
                         basketItem.setPrice(ticketItem.getPrice());
-
-                        // totalPrice assumed to be BigDecimal
                         basket.setTotalPrice(basket.getTotalPrice() + ticketItem.getPrice());
                         basketItem.setBasket(basket);
                         basketItems.add(basketItem);
@@ -138,6 +132,7 @@ public class BasketServiceImpl implements BasketService {
     @Override
     @Transactional
     public void buy(Long basketId, Long userId, CardRequest request) {
+        log.info("BasketService.buy.start userId: {}", userId);
 
         BasketEntity basket = basketRepository.findById(basketId)
                 .orElseThrow(() -> new NotFoundException("Sepet tapilmadi."));
@@ -149,7 +144,6 @@ public class BasketServiceImpl implements BasketService {
             throw new IllegalStateException("Sepetde bilet yoxdur.");
         }
 
-        // 1️⃣ Ödəniş
         IyzicoPaymentResult paymentResult =
                 iyzicoPaymentService.payForPlan(userId, basketId, request);
 
@@ -163,8 +157,12 @@ public class BasketServiceImpl implements BasketService {
 
             TicketEntity ticket = item.getTickets();
             ticket.setBooked(true);
-            ticket.setPaymentId(paymentResult.getPaymentId());
-            ticket.setUser(user);
+            TransactionEntity transaction = new TransactionEntity();
+            transaction.setAmount(BigDecimal.valueOf(item.getPrice()));
+            transaction.setPaymentId(paymentResult.getPaymentId());
+            transaction.setUser(user);
+            transaction.setTickets(List.of(ticket));
+            ticket.setTransaction(transaction);
 
             ticketRepository.save(ticket);
 
@@ -186,6 +184,7 @@ public class BasketServiceImpl implements BasketService {
         basket.setTotalPrice(0);
 
         basketRepository.save(basket);
+        log.info("BasketService.buy.end userId: {}", userId);
     }
 
 }

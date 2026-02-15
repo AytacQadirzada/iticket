@@ -2,6 +2,7 @@ package com.example.iticket.controller;
 
 import com.example.iticket.model.request.CategoryRequest;
 import com.example.iticket.model.request.VenuesRequest;
+import com.example.iticket.model.request.VenuesUpdateRequestDto;
 import com.example.iticket.model.response.CategoryResponse;
 import com.example.iticket.model.response.VenuesResponse;
 import com.example.iticket.service.concret.CategoryService;
@@ -39,7 +40,7 @@ public class VenuesController {
     }
 
     @PutMapping("/{id}")
-    public void updateVenues(@PathVariable Long id, @RequestBody VenuesRequest request){
+    public void updateVenues(@PathVariable Long id, @RequestBody VenuesUpdateRequestDto request){
         venuesService.updateVenues(id,request);
     }
 

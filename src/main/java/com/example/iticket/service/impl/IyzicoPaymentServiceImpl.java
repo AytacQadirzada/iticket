@@ -46,11 +46,7 @@ public class IyzicoPaymentServiceImpl implements IyzicoPaymentService {
     }
 
     @Override
-    public IyzicoPaymentResult payForPlan(
-            Long userId,
-            Long basketId,
-            CardRequest request
-    ) {
+    public IyzicoPaymentResult payForPlan(Long userId, Long basketId, CardRequest request) {
 
         BasketEntity basket = basketRepository.findById(basketId)
                 .orElseThrow(() -> new IllegalArgumentException("Basket not found"));

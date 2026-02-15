@@ -2,6 +2,7 @@ package com.example.iticket.service.concret;
 
 
 import com.example.iticket.model.request.VenuesRequest;
+import com.example.iticket.model.request.VenuesUpdateRequestDto;
 import com.example.iticket.model.response.VenuesResponse;
 
 import java.util.List;
@@ -11,5 +12,5 @@ public interface VenuesService {
     VenuesResponse getById(Long id);
     void createVenues(VenuesRequest venuesRequest);
     void deleteVenues(Long id);
-    void updateVenues(Long id, VenuesRequest venuesRequest);
+    void updateVenues(Long id, VenuesUpdateRequestDto request);
 }

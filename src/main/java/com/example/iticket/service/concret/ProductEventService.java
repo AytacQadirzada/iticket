@@ -11,7 +11,6 @@ import java.util.List;
 public interface ProductEventService {
     List<ProductEventResponse> getAll();
     ProductEventResponse getById(Long id);
-    void create(ProductEventRequest request);
     void delete(Long id);
     void update(Long id, ProductEventRequest request);
 }

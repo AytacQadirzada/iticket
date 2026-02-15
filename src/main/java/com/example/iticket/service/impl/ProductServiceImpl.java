@@ -67,9 +67,6 @@ public class ProductServiceImpl implements ProductService {
 
         for (ProductEventRequest productEventRequest : request.getProductEvents()) {
             Long hallId = sectorRepository.findById(productEventRequest.getSectorPrices().get(0).getSectorId()).get().getHall().getId();
-
-
-
             var sectors = sectorRepository.findByHallId(hallId);
 
             var productEventEntity = productEventMapper.toEntity(productEventRequest);
@@ -106,8 +103,6 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
 
-
-//            productEventEntity.setHall(hall);
             productEventEntity.setProduct(entity);
 
 

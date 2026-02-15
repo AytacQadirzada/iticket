@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,8 @@ public class UserEntity {
     private String email;
     @Column(unique = true, nullable = false)
     private String phone;
+    private BigDecimal balance;
+
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
@@ -49,12 +52,15 @@ public class UserEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user")
-    private List<TicketEntity> tickets;
+
+//    @OneToMany(mappedBy = "user")
+//    private List<TicketEntity> tickets;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private BasketEntity basket;
 
+    @OneToMany(mappedBy = "user")
+    private List<TransactionEntity> transactions;
 
     @Override
     public boolean equals(Object o) {

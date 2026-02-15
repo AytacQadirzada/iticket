@@ -71,8 +71,6 @@ public class AuthServiceImpl implements AuthService {
         return response;
     }
 
-
-
     @Override
     public boolean verifyOtp(String email, String otp) {
         log.info("ActionLog.verifyOtp.start: email: {}", email);

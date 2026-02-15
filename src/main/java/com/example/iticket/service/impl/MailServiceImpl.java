@@ -43,9 +43,8 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendTicketEmail(String email, TicketMailResponse ticket) {
-
+        log.info("ActionLog.sendTicketEmail.start: to={}", email);
         try {
-            // 1️⃣ HTML template oxu
             ClassPathResource resource = new ClassPathResource("templates/Bilet.html");
             String html = null;
             try {
@@ -56,8 +55,6 @@ public class MailServiceImpl implements MailService {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
-            // 2️⃣ Replace-lər
             html = html
                     .replace("{{EventName}}", ticket.getEventName())
                     .replace("{{Venue}}", ticket.getVenue())
@@ -74,7 +71,6 @@ public class MailServiceImpl implements MailService {
                             "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="
                                     + ticket.getTicketNumber());
 
-            // 3️⃣ MimeMessage (HTML)
             MimeMessage message = mailSenderJava.createMimeMessage();
             MimeMessageHelper helper =
                     null;
@@ -97,6 +93,7 @@ public class MailServiceImpl implements MailService {
             log.error("Failed to send ticket email", e);
             throw new RuntimeException("Email gonderile bilmedi", e);
         }
+        log.info("ActionLog.sendTicketEmail.end: to={}", email);
     }
 
 }

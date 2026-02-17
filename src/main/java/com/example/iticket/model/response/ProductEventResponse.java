@@ -16,7 +16,7 @@ public class ProductEventResponse {
     private String eventName;
     private double minPrice;
     private LocalDateTime eventDate;
-    private HallResponse hall;
+    private HallResponse hallResponses;
     private TicketResponse ticket;
 
 }

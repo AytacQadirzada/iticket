@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/otp")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public void otp(@RequestParam String email) {
         authService.generateOtp(email);
     }
@@ -45,11 +45,6 @@ public class UserController {
     @PostMapping("/otp/verify")
     public boolean verifyOtp(@RequestParam String email, @RequestParam String otp) {
         return authService.verifyOtp(email, otp);
-    }
-
-    @PostMapping("/forgot-password/otp")
-    public void sendForgotPasswordOtp(@RequestParam String email){
-        authService.sendForgotPasswordOtp(email);
     }
 
 

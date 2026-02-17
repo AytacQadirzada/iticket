@@ -8,13 +8,15 @@ import com.example.iticket.model.request.HallUpdateRequestDto;
 import com.example.iticket.model.response.CategoryResponse;
 import com.example.iticket.model.response.HallResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+@Mapper(componentModel = "spring", uses = {SectorMapper.class}, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
 public interface HallMapper {
     HallEntity toEntity(HallRequest request);
     HallEntity toEntity(HallUpdateRequestDto request);
+    @Mapping(source = "sectors", target = "sectorResponses")
     HallResponse toResponse(HallEntity entity);
     void mapForUpdate(HallRequest request,@MappingTarget HallEntity entity);
 }

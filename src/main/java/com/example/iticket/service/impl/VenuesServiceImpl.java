@@ -2,8 +2,10 @@ package com.example.iticket.service.impl;
 
 import com.example.iticket.dao.entity.CategoryEntity;
 import com.example.iticket.dao.entity.HallEntity;
+import com.example.iticket.dao.entity.SectorEntity;
 import com.example.iticket.dao.entity.VenuesEntity;
 import com.example.iticket.dao.repository.CategoryRepository;
+import com.example.iticket.dao.repository.HallRepository;
 import com.example.iticket.dao.repository.VenuesRepository;
 import com.example.iticket.exception.NotFoundException;
 import com.example.iticket.mapper.HallMapper;
@@ -21,6 +23,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,6 +32,7 @@ import java.util.List;
 public class VenuesServiceImpl implements VenuesService {
 
     private final VenuesRepository venuesRepository;
+    private final HallRepository hallRepository;
     private final VenuesMapper venuesMapper;
     private final HallMapper hallMapper;
     private final SectorMapper sectorMapper;
@@ -37,9 +41,9 @@ public class VenuesServiceImpl implements VenuesService {
     public List<VenuesResponse> getAll() {
         log.info("ActionLog.getAll.start");
         List<VenuesEntity> venuesEntities = venuesRepository.findAll();
-        var categories = venuesEntities.stream().map(venuesMapper::toResponse).toList();
+        var venues = venuesEntities.stream().map(venuesMapper::toResponse).toList();
         log.info("ActionLog.getAll.end");
-        return categories;
+        return venues;
     }
 
     @Override

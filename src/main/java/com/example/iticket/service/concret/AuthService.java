@@ -19,9 +19,8 @@ public interface AuthService {
     void updateUser(Long id, UserRequest request);
 
     void deleteUser(Long id);
-    UserResponse getUser(String email);
-    void sendForgotPasswordOtp(String email);
 
+    UserResponse getUser(String email);
 
     void resetPassword(ResetPasswordRequest request);
 }

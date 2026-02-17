@@ -7,12 +7,14 @@ import com.example.iticket.model.request.VenuesRequest;
 import com.example.iticket.model.response.CategoryResponse;
 import com.example.iticket.model.response.VenuesResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+@Mapper(componentModel = "spring", uses = {HallMapper.class}, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
 public interface VenuesMapper {
     VenuesEntity toEntity(VenuesRequest request);
+    @Mapping(source = "halls", target = "hallResponses")
     VenuesResponse toResponse(VenuesEntity entity);
     void mapForUpdate(VenuesRequest response,@MappingTarget VenuesEntity entity);
 

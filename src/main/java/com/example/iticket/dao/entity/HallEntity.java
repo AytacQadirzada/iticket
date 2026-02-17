@@ -7,8 +7,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "halls")
@@ -22,13 +24,16 @@ public class HallEntity {
 //    @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
-    private List<SectorEntity> sectors;
+//    @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
+//    private List<SectorEntity> sectors;
+
+    @OneToMany(mappedBy = "hall", fetch = FetchType.LAZY)
+    private Set<SectorEntity> sectors = new HashSet<>();
 
 //    @OneToMany(mappedBy = "hall")
 //    private List<ProductEventEntity> productEvents;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "venue_id")
     private VenuesEntity venue;
 

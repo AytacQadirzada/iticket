@@ -5,6 +5,7 @@ import com.example.iticket.model.request.ResetPasswordRequest;
 import com.example.iticket.model.response.AuthResponse;
 import com.example.iticket.model.response.UserResponse;
 import com.example.iticket.service.concret.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +19,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(@RequestBody RegisterUserRequest request) {
+    public void registerUser(@Valid @RequestBody RegisterUserRequest request) {
         authService.registerUser(request);
     }
 

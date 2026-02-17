@@ -14,5 +14,5 @@ import java.util.List;
 public class HallResponse {
     private Long id;
     private String name;
-    private List<SectorResponse> sectors;
+    private List<SectorResponse> sectorResponses;
 }

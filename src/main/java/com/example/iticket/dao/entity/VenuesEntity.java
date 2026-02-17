@@ -1,16 +1,20 @@
 package com.example.iticket.dao.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "venues")
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VenuesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +32,11 @@ public class VenuesEntity {
     @Column(nullable = false)
     private String mapLng;
 
-    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL)
-    private List<HallEntity> halls;
+//    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL)
+//    private List<HallEntity> halls;
+    @OneToMany(mappedBy = "venue", fetch = FetchType.LAZY)
+    private Set<HallEntity> halls = new HashSet<>();
+
 
     @Override
     public boolean equals(Object o) {

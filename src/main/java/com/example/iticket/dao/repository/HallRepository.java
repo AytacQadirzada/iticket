@@ -11,4 +11,6 @@ public interface HallRepository extends JpaRepository<HallEntity,Long> {
     @Override
     @Query(value = "SELECT h FROM HallEntity h left JOIN SectorEntity s ON s.hall.id = h.id")
     List<HallEntity> findAll();
+
+    List<HallEntity> findByVenueId(Long venueId);
 }

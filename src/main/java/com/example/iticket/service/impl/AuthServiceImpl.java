@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Service
@@ -49,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
         wishlistEntity.setUser(user);
         user.setWishlist(wishlistEntity);
         user.setBasket(basketEntity);
+        user.setBalance(BigDecimal.valueOf(0));
         user.setRoles(Set.of(Role.ROLE_USER.name()));
         userRepository.save(user);
 
@@ -124,27 +126,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void sendForgotPasswordOtp(String email) {
-        log.info("ActionLog.forgerPassword.start email: {} ", email);
-        userRepository.findByEmail(email).orElseThrow(() -> {
-            log.error("ActionLog.forgerPassword.error User not found with email: {} ", email);
-            return new NotFoundException("User not found");
-        });
-        otpService.generateOtp(email);
-        log.info("ActionLog.forgerPassword.end email: {} ", email);
-    }
-
-
-    @Override
     public void resetPassword(ResetPasswordRequest request) {
         log.info("ActionLog.resetPassword.start email: {} ", request.getEmail());
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> {
             log.error("ActionLog.resetPassword.error User not found with email: {} ", request.getEmail());
             return new NotFoundException("User not found");
         });
-        if(!otpService.verifyOtp(request.getEmail(),request.getOtp())){
-            throw new OtpException("Invalid OTP");
-        }
 
         if (!request.getNewPassword().equals(request.getPasswordConfirmation())) {
             log.error("ActionLog.resetPassword.error password not equals: {} ", request.getEmail());

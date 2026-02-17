@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class UserRequest {
-    private Long id;
+//    private Long id;
     private String name;
     private String surname;
     private String email;
@@ -20,6 +20,6 @@ public class UserRequest {
     private boolean gender;
     private String country;
     private LocalDate dateOfBirth;
-    private boolean isEmailVerified;
+//    private boolean isEmailVerified;
 
 }

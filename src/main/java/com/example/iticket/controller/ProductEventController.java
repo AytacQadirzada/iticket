@@ -27,11 +27,6 @@ public class ProductEventController {
         return service.getById(id);
     }
 
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public void create(@RequestBody ProductEventRequest request){
-//        service.create(request);
-//    }
 
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @RequestBody ProductEventRequest request){

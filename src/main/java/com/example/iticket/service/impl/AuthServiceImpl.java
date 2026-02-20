@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse login(String email, String password) {
         log.info("ActionLog.login.start: email: {}", email);
         var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RegistrationException("Invalid email or password"));
+                .orElseThrow(() -> new RegistrationException("User not found!"));
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RegistrationException("Invalid email or password");
         }

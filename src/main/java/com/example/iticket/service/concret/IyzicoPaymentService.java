@@ -10,4 +10,8 @@ public interface IyzicoPaymentService {
             CardRequest request
     );
     void refund(String paymentId);
+    IyzicoPaymentResult addBalance(
+            Long userId,
+            double amount,
+            CardRequest request);
 }

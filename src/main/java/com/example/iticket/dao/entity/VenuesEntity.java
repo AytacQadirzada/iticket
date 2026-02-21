@@ -32,8 +32,6 @@ public class VenuesEntity {
     @Column(nullable = false)
     private String mapLng;
 
-//    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL)
-//    private List<HallEntity> halls;
     @OneToMany(mappedBy = "venue", fetch = FetchType.LAZY)
     private Set<HallEntity> halls = new HashSet<>();
 

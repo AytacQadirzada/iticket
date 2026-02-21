@@ -1,20 +1,26 @@
 package com.example.iticket.service.impl;
 
 import com.example.iticket.dao.entity.BasketEntity;
+import com.example.iticket.dao.entity.TicketEntity;
+import com.example.iticket.dao.entity.UserEntity;
 import com.example.iticket.dao.entity.WishlistEntity;
+import com.example.iticket.dao.repository.TicketRepository;
 import com.example.iticket.dao.repository.UserRepository;
 import com.example.iticket.enums.Role;
 import com.example.iticket.exception.NotFoundException;
 import com.example.iticket.exception.NotMatchException;
-import com.example.iticket.exception.OtpException;
 import com.example.iticket.exception.RegistrationException;
+import com.example.iticket.mapper.TicketMapper;
 import com.example.iticket.mapper.UserMapper;
+import com.example.iticket.model.request.CardRequest;
 import com.example.iticket.model.request.RegisterUserRequest;
 import com.example.iticket.model.request.ResetPasswordRequest;
 import com.example.iticket.model.request.UserRequest;
 import com.example.iticket.model.response.AuthResponse;
+import com.example.iticket.model.response.TicketResponse;
 import com.example.iticket.model.response.UserResponse;
 import com.example.iticket.service.concret.AuthService;
+import com.example.iticket.service.concret.IyzicoPaymentService;
 import com.example.iticket.service.concret.OtpService;
 import com.example.iticket.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +29,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -34,6 +43,9 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final OtpService otpService;
     private final JwtUtil jwtUtil;
+    private final IyzicoPaymentService iyzicoPaymentService;
+    private final TicketRepository ticketRepository;
+    private final TicketMapper ticketMapper;
 
     @Override
     public void registerUser(RegisterUserRequest request) {
@@ -97,8 +109,8 @@ public class AuthServiceImpl implements AuthService {
     public void updateUser(Long id, UserRequest request){
         log.info("ActionLog.updateUser.start id: {} ", id);
         var entity = userRepository.findById(id).orElseThrow(() -> {
-            log.error("ActionLog.updateUser.error Category not found with id: {} ", id);
-            return new NotFoundException("Category not found");
+            log.error("ActionLog.updateUser.error User not found with id: {} ", id);
+            return new NotFoundException("User not found");
         });
         userMapper.mapForUpdate(request, entity);
         entity.setId(id);
@@ -141,5 +153,36 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
         log.info("ActionLog.resetPassword.end email: {} ", request.getEmail());
 
+    }
+
+    @Override
+    public void userBalanceIncrease(Long id, Double amount, CardRequest request) {
+            UserEntity user = userRepository.findById(id).orElseThrow(() -> {
+                        log.error("ActionLog.userBalanceIncrease.error User not found with id: {} ", id);
+                        return new NotFoundException("User not found");
+                    });
+            var paymentResult = iyzicoPaymentService.addBalance(id, amount, request);
+
+            if (!paymentResult.isSuccess())
+                throw new IllegalStateException("Odeme basarisiz oldu:" + paymentResult.getErrorMessage());
+
+            userRepository.save(user);
+    }
+
+
+    public List<TicketResponse> myTickets(Long userId, Boolean before) {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        List<TicketEntity> tickets = ticketRepository.findByUserId(userId)
+                .stream()
+                .filter(t -> before
+                        ? t.getProductEvent().getEventDate().isBefore(now)
+                        : !t.getProductEvent().getEventDate().isBefore(now))
+                .toList();
+
+        return tickets.stream()
+                .map(ticketMapper::toResponse)
+                .toList();
     }
 }

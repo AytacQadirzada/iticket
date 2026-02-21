@@ -1,9 +1,11 @@
 package com.example.iticket.controller;
 
+import com.example.iticket.model.request.CardRequest;
 import com.example.iticket.model.request.RegisterUserRequest;
 import com.example.iticket.model.request.ResetPasswordRequest;
 import com.example.iticket.model.request.UserRequest;
 import com.example.iticket.model.response.AuthResponse;
+import com.example.iticket.model.response.TicketResponse;
 import com.example.iticket.model.response.UserResponse;
 import com.example.iticket.service.concret.AuthService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -11,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/user")
@@ -47,9 +51,18 @@ public class UserController {
         return authService.verifyOtp(email, otp);
     }
 
-
     @PutMapping("/forgot-password/reset")
     public void resetPassword(@RequestBody ResetPasswordRequest request){
         authService.resetPassword(request);
+    }
+
+    @PutMapping("/balace-increase")
+    public void increaseBalance(@RequestParam Long id, @RequestParam double amount, @RequestBody CardRequest request) {
+        authService.userBalanceIncrease(id, amount, request);
+    }
+
+    @GetMapping("/myTickets")
+    public List<TicketResponse> getMyTickets(@RequestParam Long id, @RequestParam Boolean before) {
+        return authService.myTickets(id, before);
     }
 }

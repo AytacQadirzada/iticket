@@ -1,8 +1,10 @@
 package com.example.iticket.service.impl;
 
 import com.example.iticket.dao.entity.BasketEntity;
+import com.example.iticket.dao.entity.TransactionEntity;
 import com.example.iticket.dao.entity.UserEntity;
 import com.example.iticket.dao.repository.BasketRepository;
+import com.example.iticket.dao.repository.TransactionRepository;
 import com.example.iticket.dao.repository.UserRepository;
 import com.example.iticket.model.request.CardRequest;
 import com.example.iticket.model.response.IyzicoPaymentResult;
@@ -11,12 +13,16 @@ import com.iyzipay.Options;
 import com.iyzipay.model.*;
 import com.iyzipay.request.CreateCancelRequest;
 import com.iyzipay.request.CreatePaymentRequest;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,20 +35,22 @@ public class IyzicoPaymentServiceImpl implements IyzicoPaymentService {
     private final UserRepository userRepository;
 
     private final Options options = new Options();
+    private final TransactionRepository transactionRepository;
 
     public IyzicoPaymentServiceImpl(
             BasketRepository basketRepository,
             UserRepository userRepository,
             @Value("${iyzico.api-key}") String apiKey,
             @Value("${iyzico.secret-key}") String secretKey,
-            @Value("${iyzico.base-url:https://sandbox-api.iyzipay.com}") String baseUrl
-    ) {
+            @Value("${iyzico.base-url:https://sandbox-api.iyzipay.com}") String baseUrl,
+            TransactionRepository transactionRepository) {
         this.basketRepository = basketRepository;
         this.userRepository = userRepository;
 
         options.setApiKey(apiKey);
         options.setSecretKey(secretKey);
         options.setBaseUrl(baseUrl);
+        this.transactionRepository = transactionRepository;
     }
 
     @Override
@@ -146,5 +154,104 @@ public class IyzicoPaymentServiceImpl implements IyzicoPaymentService {
                             cancel.getErrorCode() + " - " + cancel.getErrorMessage()
             );
         }
+    }
+
+    @Transactional
+    public IyzicoPaymentResult addBalance(
+            Long userId,
+            double amount,
+            CardRequest request) {
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than 0");
+        }
+
+        if (request == null) {
+            throw new IllegalArgumentException("Card information is missing");
+        }
+
+        String priceStr = String.format(Locale.US, "%.2f", amount);
+        BigDecimal newPrice = new BigDecimal(priceStr);
+
+        CreatePaymentRequest createRequest = new CreatePaymentRequest();
+        createRequest.setLocale("tr");
+        createRequest.setConversationId(UUID.randomUUID().toString().replace("-", ""));
+        createRequest.setPrice(newPrice);
+        createRequest.setPaidPrice(newPrice);
+        createRequest.setInstallment(1);
+        createRequest.setBasketId("BALANCE_" + userId);
+        createRequest.setPaymentChannel("WEB");
+        createRequest.setPaymentGroup("PRODUCT");
+
+        PaymentCard paymentCard = new PaymentCard();
+        paymentCard.setCardHolderName(request.getCardHolderName());
+        paymentCard.setCardNumber(request.getCardNumber());
+        paymentCard.setExpireMonth(request.getExpireMonth());
+        paymentCard.setExpireYear(request.getExpireYear());
+        paymentCard.setCvc(request.getCvv());
+        paymentCard.setRegisterCard(0);
+
+        createRequest.setPaymentCard(paymentCard);
+
+        Buyer buyer = new Buyer();
+        buyer.setId(String.valueOf(user.getId()));
+        buyer.setName(user.getName() != null ? user.getName() : "User");
+        buyer.setSurname(user.getSurname() != null ? user.getSurname() : "-");
+        buyer.setEmail(user.getEmail());
+        buyer.setIdentityNumber("11111111110");
+        buyer.setRegistrationAddress("Balance Topup");
+        buyer.setIp("127.0.0.1");
+        buyer.setCity("Istanbul");
+        buyer.setCountry("Turkey");
+        buyer.setZipCode("34000");
+
+        createRequest.setBuyer(buyer);
+
+        Address address = new Address();
+        address.setContactName(user.getName() + " " + user.getName());
+        address.setCity("Istanbul");
+        address.setCountry("Turkey");
+        address.setAddress("Balance Topup");
+        address.setZipCode("34000");
+
+        createRequest.setShippingAddress(address);
+        createRequest.setBillingAddress(address);
+
+        // Basket
+        BasketItem item = new BasketItem();
+        item.setId("BALANCE");
+        item.setName("Balance Top-Up");
+        item.setCategory1("Wallet");
+        item.setItemType("VIRTUAL");
+        item.setPrice(newPrice);
+
+        createRequest.setBasketItems(List.of(item));
+
+        Payment payment = Payment.create(createRequest, options);
+
+        IyzicoPaymentResult result = new IyzicoPaymentResult();
+        result.setSuccess("success".equals(payment.getStatus()));
+        result.setPaymentId(payment.getPaymentId());
+        result.setErrorCode(payment.getErrorCode());
+        result.setErrorMessage(payment.getErrorMessage());
+
+        if (result.isSuccess()) {
+
+            user.setBalance(user.getBalance().add(BigDecimal.valueOf(amount)));
+            userRepository.save(user);
+
+            TransactionEntity transaction = new TransactionEntity();
+            transaction.setUser(user);
+            transaction.setAmount(BigDecimal.valueOf(amount));
+            transaction.setPaymentId(payment.getPaymentId());
+            transaction.setCreatedAt(LocalDateTime.now());
+
+            transactionRepository.save(transaction);
+        }
+
+        return result;
     }
 }

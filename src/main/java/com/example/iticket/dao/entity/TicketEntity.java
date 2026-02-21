@@ -30,9 +30,11 @@ public class TicketEntity {
     @JoinColumn(name = "transaction_id")
     private TransactionEntity transaction;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private UserEntity user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+
 
 
 //    private String paymentId;

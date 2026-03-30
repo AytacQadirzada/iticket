@@ -66,4 +66,9 @@ public class ProductEventServiceImpl implements ProductEventService {
         repository.save(entity);
         log.info("ActionLog.update.end id: {} ", id);
     }
+    public List<ProductEventResponse> getProductEventsByProductId(Long productId){
+        List<ProductEventEntity> productEvents = repository.getAllByProductId(productId);
+        List<ProductEventResponse> response = mapper.toListResponse(productEvents);
+        return response;
+    }
 }

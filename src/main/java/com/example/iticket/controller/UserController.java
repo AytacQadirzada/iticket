@@ -24,31 +24,29 @@ public class UserController {
     private final AuthService authService;
 
     @GetMapping
-    public UserResponse profile(@RequestParam String email){
-        return authService.getUser(email);
+    public UserResponse profile(){
+        return authService.getUser();
     }
 
-
-
-    @PutMapping("/{id}")
-    public void updateUser(@PathVariable Long id, @RequestBody UserRequest request){
-        authService.updateUser(id,request);
+    @PutMapping
+    public void updateUser(@RequestBody UserRequest request){
+        authService.updateUser(request);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id){
-        authService.deleteUser(id);
+    @DeleteMapping
+    public void deleteUser(){
+        authService.deleteUser();
     }
 
     @PostMapping("/otp")
 //    @PreAuthorize("hasRole('ADMIN')")
-    public void otp(@RequestParam String email) {
-        authService.generateOtp(email);
+    public void otp() {
+        authService.generateOtp();
     }
 
     @PostMapping("/otp/verify")
-    public boolean verifyOtp(@RequestParam String email, @RequestParam String otp) {
-        return authService.verifyOtp(email, otp);
+    public boolean verifyOtp(@RequestParam String otp) {
+        return authService.verifyOtp(otp);
     }
 
     @PutMapping("/forgot-password/reset")
@@ -56,13 +54,13 @@ public class UserController {
         authService.resetPassword(request);
     }
 
-    @PutMapping("/balace-increase")
-    public void increaseBalance(@RequestParam Long id, @RequestParam double amount, @RequestBody CardRequest request) {
-        authService.userBalanceIncrease(id, amount, request);
-    }
+//    @PutMapping("/balace-increase")
+//    public void increaseBalance(@RequestParam double amount, @RequestBody CardRequest request) {
+//        authService.userBalanceIncrease(amount, request);
+//    }
 
     @GetMapping("/myTickets")
-    public List<TicketResponse> getMyTickets(@RequestParam Long id, @RequestParam Boolean before) {
-        return authService.myTickets(id, before);
+    public List<TicketResponse> getMyTickets() {
+        return authService.myTickets();
     }
 }

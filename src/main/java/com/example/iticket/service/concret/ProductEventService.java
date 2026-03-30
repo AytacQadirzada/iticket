@@ -13,4 +13,5 @@ public interface ProductEventService {
     ProductEventResponse getById(Long id);
     void delete(Long id);
     void update(Long id, ProductEventRequest request);
+    List<ProductEventResponse> getProductEventsByProductId(Long productId);
 }

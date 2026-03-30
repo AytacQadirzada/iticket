@@ -32,8 +32,8 @@ public class VenuesEntity {
     @Column(nullable = false)
     private String mapLng;
 
-    @OneToMany(mappedBy = "venue", fetch = FetchType.LAZY)
-    private Set<HallEntity> halls = new HashSet<>();
+    @OneToMany(mappedBy = "venue", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<HallEntity> halls;
 
 
     @Override

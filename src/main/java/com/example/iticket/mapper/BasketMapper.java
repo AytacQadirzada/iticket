@@ -5,7 +5,7 @@ import com.example.iticket.model.response.BasketResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+@Mapper(componentModel = "spring", uses = BasketItemMapper.class, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
 public interface BasketMapper {
     BasketResponse toResponse(BasketEntity entity);
 }

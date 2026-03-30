@@ -36,9 +36,21 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable).
                 authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/v1/user/**").authenticated()
+                        .requestMatchers("/v1/user/**").authenticated()
 //                        .requestMatchers("/v1/venues/**").authenticated()
+                        .requestMatchers("/v1/basket/**").authenticated()
+                        .requestMatchers("/v1/ticket/**").authenticated()
+                        .requestMatchers("/v1/files/upload").authenticated()
+                        .requestMatchers("/v1/product/create").authenticated()
+                        .requestMatchers("/v1/product/update/**").authenticated()
+                        .requestMatchers("/v1/product/delete/**").authenticated()
                         .requestMatchers("/v1/categories/**").authenticated()
+                        .requestMatchers("/v1/productEvent/delete/**").authenticated()
+                        .requestMatchers("/v1/productEvent/update/**").authenticated()
+                        .requestMatchers("/v1/venues/delete/**").authenticated()
+                        .requestMatchers("/v1/venues/update/**").authenticated()
+                        .requestMatchers("/v1/venues/create").authenticated()
+                        .requestMatchers("/v1/wishlist/**").authenticated()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",

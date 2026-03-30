@@ -7,10 +7,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+@Mapper(
+        componentModel = "spring",
+        uses = {CategoryMapper.class, ProductEventMapper.class},
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
 public interface ProductMapper {
     ProductEntity toEntity(ProductRequest request);
+
     ProductResponse toResponse(ProductEntity entity);
-    void mapForUpdate(ProductRequest request,@MappingTarget ProductEntity entity);
+
+    void mapForUpdate(ProductRequest request, @MappingTarget ProductEntity entity);
 
 }

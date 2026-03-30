@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +18,6 @@ public class ProductEventResponse {
     private double minPrice;
     private LocalDateTime eventDate;
     private HallResponse hallResponses;
-    private TicketResponse ticket;
+    private List<TicketResponse> ticket;
 
 }

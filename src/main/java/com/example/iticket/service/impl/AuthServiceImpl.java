@@ -5,6 +5,7 @@ import com.example.iticket.dao.entity.TicketEntity;
 import com.example.iticket.dao.entity.UserEntity;
 import com.example.iticket.dao.entity.WishlistEntity;
 import com.example.iticket.dao.repository.TicketRepository;
+import com.example.iticket.dao.repository.TransactionRepository;
 import com.example.iticket.dao.repository.UserRepository;
 import com.example.iticket.enums.Role;
 import com.example.iticket.exception.NotFoundException;
@@ -25,11 +26,13 @@ import com.example.iticket.service.concret.OtpService;
 import com.example.iticket.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -46,12 +49,16 @@ public class AuthServiceImpl implements AuthService {
     private final IyzicoPaymentService iyzicoPaymentService;
     private final TicketRepository ticketRepository;
     private final TicketMapper ticketMapper;
+    private final TransactionRepository transactionRepository;
 
     @Override
     public void registerUser(RegisterUserRequest request) {
         log.info("ActionLog.registerUser.start: email={}", request.getEmail());
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
-            throw new RegistrationException("email already exists");
+            throw new RegistrationException("Email already exists");
+        });
+        userRepository.findByPhone(request.getPhone()).ifPresent(user -> {
+            throw new RegistrationException("Phone already exists");
         });
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         var user = userMapper.toEntity(request);
@@ -86,7 +93,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean verifyOtp(String email, String otp) {
+    public boolean verifyOtp(String otp) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
         log.info("ActionLog.verifyOtp.start: email: {}", email);
         boolean verify = otpService.verifyOtp(email, otp);
         var user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
@@ -99,35 +108,47 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void generateOtp(String email) {
+    public void generateOtp() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
         log.info("ActionLog.generateOtp.start: email: {}", email);
         otpService.generateOtp(email);
         log.info("ActionLog.generateOtp.end: email: {}", email);
     }
 
     @Override
-    public void updateUser(Long id, UserRequest request){
-        log.info("ActionLog.updateUser.start id: {} ", id);
-        var entity = userRepository.findById(id).orElseThrow(() -> {
-            log.error("ActionLog.updateUser.error User not found with id: {} ", id);
+    public void updateUser( UserRequest request){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        log.info("ActionLog.updateUser.start email: {} ", email);
+        var entity = userRepository.findByEmail(email).orElseThrow(() -> {
+            log.error("ActionLog.updateUser.error User not found with email: {} ", email);
             return new NotFoundException("User not found");
         });
         userMapper.mapForUpdate(request, entity);
-        entity.setId(id);
         userRepository.save(entity);
-        log.info("ActionLog.updateUser.end id: {} ", id);
+        log.info("ActionLog.updateUser.end email: {} ", email);
     }
 
     @Override
-    public void deleteUser(Long id){
-        log.info("ActionLog.deleteUser.start id: {} ", id);
+    public void deleteUser(){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        log.info("ActionLog.deleteUser.start email: {} ", email);
+        var id = userRepository.findByEmail(email).orElseThrow(() -> {
+            log.error("ActionLog.deleteUser.error User not found with email: {} ", email);
+            return new NotFoundException("User not found");
+        }).getId();
         userRepository.deleteById(id);
-        log.info("ActionLog.deleteUser.end id: {} ", id);
+        log.info("ActionLog.deleteUser.end id: {} ", email);
     }
 
     @Override
-    public UserResponse getUser(String email){
-        log.info("ActionLog.getUser.start email: {} ", email);
+    public UserResponse getUser(){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        log.info("ActionLog.getUser.start email: {} " , email);
+
         var user = userRepository.findByEmail(email).orElseThrow(() -> {
             log.error("ActionLog.getUser.error User not found with email: {} ", email);
             return new NotFoundException("User not found");
@@ -154,32 +175,38 @@ public class AuthServiceImpl implements AuthService {
         log.info("ActionLog.resetPassword.end email: {} ", request.getEmail());
 
     }
+//
+//    @Override
+//    public void userBalanceIncrease(Double amount, CardRequest request) {
+//        var authentication = SecurityContextHolder.getContext().getAuthentication();
+//        var email = authentication.getName();
+//            UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> {
+//                        log.error("ActionLog.userBalanceIncrease.error User not found with email: {} ", email);
+//                        return new NotFoundException("User not found");
+//                    });
+//            var id = user.getId();
+//            var paymentResult = iyzicoPaymentService.addBalance(id, amount, request);
+//
+//            if (!paymentResult.isSuccess())
+//                throw new IllegalStateException("Odeme basarisiz oldu:" + paymentResult.getErrorMessage());
+//
+//            userRepository.save(user);
+//    }
 
-    @Override
-    public void userBalanceIncrease(Long id, Double amount, CardRequest request) {
-            UserEntity user = userRepository.findById(id).orElseThrow(() -> {
-                        log.error("ActionLog.userBalanceIncrease.error User not found with id: {} ", id);
-                        return new NotFoundException("User not found");
-                    });
-            var paymentResult = iyzicoPaymentService.addBalance(id, amount, request);
 
-            if (!paymentResult.isSuccess())
-                throw new IllegalStateException("Odeme basarisiz oldu:" + paymentResult.getErrorMessage());
-
-            userRepository.save(user);
-    }
-
-
-    public List<TicketResponse> myTickets(Long userId, Boolean before) {
+    public List<TicketResponse> myTickets() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        var userId = userRepository.findByEmail(email).orElseThrow(() -> {
+            log.error("ActionLog.myTickets.error User not found with email: {} ", email);
+            return new NotFoundException("User not found");
+        }).getId();
 
         LocalDateTime now = LocalDateTime.now();
+        var transactions = transactionRepository.getAllByUserId(userId);
 
-        List<TicketEntity> tickets = ticketRepository.findByUserId(userId)
-                .stream()
-                .filter(t -> before
-                        ? t.getProductEvent().getEventDate().isBefore(now)
-                        : !t.getProductEvent().getEventDate().isBefore(now))
-                .toList();
+        List<TicketEntity> tickets = transactions.stream()
+                .flatMap(t -> t.getTickets().stream()).toList();
 
         return tickets.stream()
                 .map(ticketMapper::toResponse)

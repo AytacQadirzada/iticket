@@ -28,7 +28,7 @@ public class RegisterUserRequest {
     @Size(min = 8, message = "Şifrə minimum 8 simvol olmalıdır")
     @Pattern(
             regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).*$",
-            message = "Şifrə ən az 1 böyük hərf, 1 kiçik hərf və 1 rəqəm içerməlidir"
+            message = "Şifrədə ən az 1 böyük hərf, 1 kiçik hərf və 1 rəqəm olmalıdır"
     )
     private String password;
 
@@ -39,6 +39,6 @@ public class RegisterUserRequest {
     )
     private String phone;
 
-    @NotNull(message = "Gender seçilməlidir")
+    @NotNull(message = "Cins seçilməlidir")
     private Boolean gender;
 }

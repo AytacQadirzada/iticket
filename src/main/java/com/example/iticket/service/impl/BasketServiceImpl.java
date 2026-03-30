@@ -9,18 +9,17 @@ import com.example.iticket.exception.NotFoundException;
 import com.example.iticket.mapper.BasketItemMapper;
 import com.example.iticket.mapper.BasketMapper;
 import com.example.iticket.mapper.ProductEventMapper;
+import com.example.iticket.mapper.TicketMapper;
 import com.example.iticket.model.request.BasketItemRequest;
 import com.example.iticket.model.request.CardRequest;
-import com.example.iticket.model.response.BasketResponse;
-import com.example.iticket.model.response.IyzicoPaymentResult;
-import com.example.iticket.model.response.ProductEventResponse;
-import com.example.iticket.model.response.TicketMailResponse;
+import com.example.iticket.model.response.*;
 import com.example.iticket.service.concret.BasketService;
 import com.example.iticket.service.concret.IyzicoPaymentService;
 import com.example.iticket.service.concret.MailService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -40,11 +39,14 @@ public class BasketServiceImpl implements BasketService {
     private final IyzicoPaymentService iyzicoPaymentService;
     private final MailService mailService;
     private final ProductEventMapper productEventMapper;
+    private final TicketMapper ticketMapper;
 
     @Override
     public void addItem(BasketItemRequest request) {
-        log.info("BasketService.addItem.start userId: {}", request.getUserId());
-        BasketEntity basket = userRepository.findById(request.getUserId())
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        log.info("BasketService.addItem.start email: {}", email);
+        BasketEntity basket = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"))
                 .getBasket();
         List<BasketItemEntity> basketItems = new ArrayList<>();
@@ -88,14 +90,16 @@ public class BasketServiceImpl implements BasketService {
         }
         basket.setBasketItems(basketItems);
         basketRepository.save(basket);
-        log.info("BasketService.addItem.end userId: {}", request.getUserId());
+        log.info("BasketService.addItem.end email: {}", email);
     }
 
     @Override
-    public void removeItem(Long userId, Long basketItemId) {
-        log.info("BasketService.removeItem.start userId: {}", userId);
+    public void removeItem(Long basketItemId) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        log.info("BasketService.removeItem.start email: {}", email);
 
-        BasketEntity basket = userRepository.findById(userId)
+        BasketEntity basket = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"))
                 .getBasket();
 
@@ -108,14 +112,16 @@ public class BasketServiceImpl implements BasketService {
         basketItemRepository.delete(basketItem);
         basketRepository.save(basket);
 
-        log.info("BasketService.removeItem.end userId: {}", userId);
+        log.info("BasketService.removeItem.end email: {}", email);
     }
 
 
     @Override
-    public BasketResponse getBasket(Long userId) {
-        log.info("BasketSerice.getById.start userId: {}", userId);
-        var basketId = userRepository.findById(userId).get().getBasket().getId();
+    public BasketResponse getBasket() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        log.info("BasketSerice.getById.start email: {}", email);
+        var basketId = userRepository.findByEmail(email).get().getBasket().getId();
         BasketEntity basketEntity = basketRepository.findById(basketId).get();
 
         var response = mapper.toResponse(basketEntity);
@@ -123,29 +129,36 @@ public class BasketServiceImpl implements BasketService {
             for(var ticket : basketEntity.getBasketItems()){
                 ProductEventResponse productEventResponse = productEventMapper.toResponse(ticket.getTickets().getProductEvent());
                 item.setProduct(productEventResponse);
+                var tickets = new ArrayList<TicketEntity>();
+                tickets.add(ticket.getTickets());
+                var ticketResponses = ticketMapper.toResponseList(tickets);
+                item.getProduct().setTicket(ticketResponses);
             }
         }
-        log.info("BasketSerice.getById.end userId: {}", userId);
+        log.info("BasketSerice.getById.end email: {}", email);
         return response;
     }
 
     @Override
     @Transactional
-    public void buy(Long basketId, Long userId, CardRequest request) {
-        log.info("BasketService.buy.start userId: {}", userId);
+    public void buy(Long basketId, CardRequest request) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        log.info("BasketService.buy.start email: {}", email);
 
         BasketEntity basket = basketRepository.findById(basketId)
                 .orElseThrow(() -> new NotFoundException("Sepet tapilmadi."));
 
-        UserEntity user = userRepository.findById(userId)
+        UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Istifadeci tapilmadi."));
 
         if (basket.getBasketItems() == null || basket.getBasketItems().isEmpty()) {
             throw new IllegalStateException("Sepetde bilet yoxdur.");
         }
 
+
         IyzicoPaymentResult paymentResult =
-                iyzicoPaymentService.payForPlan(userId, basketId, request);
+                iyzicoPaymentService.payForPlan(user.getId(), basketId, request);
 
         if (!paymentResult.isSuccess()) {
             throw new IllegalStateException(
@@ -184,7 +197,7 @@ public class BasketServiceImpl implements BasketService {
         basket.setTotalPrice(0);
 
         basketRepository.save(basket);
-        log.info("BasketService.buy.end userId: {}", userId);
+        log.info("BasketService.buy.end email: {}", email);
     }
 
 }

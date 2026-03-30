@@ -7,6 +7,6 @@ import com.example.iticket.model.response.WishlistResponse;
 import java.util.List;
 
 public interface WishlistService {
-    WishlistResponse getById(Long userId);
-    void addProduct(Long userId, Long productId);
+    WishlistResponse getById();
+    void addProduct(Long productId);
 }

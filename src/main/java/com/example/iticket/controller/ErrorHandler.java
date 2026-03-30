@@ -6,8 +6,10 @@ import com.example.iticket.exception.NotMatchException;
 import com.example.iticket.model.response.ErrorResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -67,6 +69,16 @@ public class ErrorHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 exception.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value()
+        );
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbidden(AuthorizationDeniedException exception) {
+        return new ErrorResponse(
+                HttpStatus.FORBIDDEN,
+                exception.getMessage(),
+                HttpStatus.FORBIDDEN.value()
         );
     }
 

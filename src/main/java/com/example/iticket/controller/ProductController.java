@@ -6,6 +6,7 @@ import com.example.iticket.service.concret.ProductService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,18 +28,21 @@ public class ProductController {
         return service.getById(id);
     }
 
-    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody ProductRequest request){
         service.create(request);
     }
 
-    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, @RequestBody ProductRequest request){
         service.update(id,request);
     }
 
-    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("delete/{id}")
     public void deleteCategory(@PathVariable Long id){
         service.delete(id);
     }

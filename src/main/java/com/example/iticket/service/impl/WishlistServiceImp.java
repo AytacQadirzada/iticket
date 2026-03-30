@@ -12,6 +12,7 @@ import com.example.iticket.service.concret.WishlistService;
 import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -25,20 +26,24 @@ public class WishlistServiceImp implements WishlistService {
     private final ProductRepository productRepository;
 
     @Override
-    public WishlistResponse getById(Long userId) {
-        log.info("WishlistService.getById.start userId: {}", userId);
-        var wishlistId = userRepository.findById(userId).get().getWishlist().getId();
+    public WishlistResponse getById() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        log.info("WishlistService.getById.start email: {}", email);
+        var wishlistId = userRepository.findByEmail(email).get().getWishlist().getId();
         var wishlistEntity = wishlistRepository.findById(wishlistId).get();
         var response = mapper.toResponse(wishlistEntity);
-        log.info("WishlistService.getById.end userId: {}", userId);
+        log.info("WishlistService.getById.end email: {}", email);
         return response;
     }
 
     @Override
-    public void addProduct(Long userId, Long productId) {
-        log.info("WishlistService.addProduct.start userId: {}, productId: {}", userId, productId);
+    public void addProduct(Long productId) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        log.info("WishlistService.addProduct.start email: {}, productId: {}", email, productId);
 
-        var wishlist = userRepository.findById(userId)
+        var wishlist = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"))
                 .getWishlist();
 
@@ -53,7 +58,7 @@ public class WishlistServiceImp implements WishlistService {
 
         wishlistRepository.save(wishlist);
 
-        log.info("WishlistService.addProduct.end userId: {}, productId: {}", userId, productId);
+        log.info("WishlistService.addProduct.end email: {}, productId: {}", email, productId);
     }
 
 }

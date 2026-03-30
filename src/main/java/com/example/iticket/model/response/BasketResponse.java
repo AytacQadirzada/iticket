@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class BasketResponse {
+    private Long id;
     private List<BasketItemResponse> basketItems;
     private Double totalPrice;
     private Integer totalQuantity;

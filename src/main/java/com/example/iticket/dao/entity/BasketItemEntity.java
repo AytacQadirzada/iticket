@@ -15,7 +15,7 @@ public class BasketItemEntity {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
     private int quantity;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private TicketEntity tickets;
     private double price;
     @ManyToOne

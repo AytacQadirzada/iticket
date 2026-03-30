@@ -252,7 +252,7 @@ class AuthServiceImplTest {
             authService.updateUser(id, request)
         }
 
-        assertEquals("Category not found", exception.message)
+        assertEquals("User not found", exception.message)
         verify(userRepository).findById(id)
         verify(userMapper, never()).mapForUpdate(any(), any())
         verify(userRepository, never()).save(any())

@@ -5,6 +5,7 @@ import com.example.iticket.model.request.CardRequest;
 import com.example.iticket.model.response.BasketResponse;
 import com.example.iticket.service.concret.BasketService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,10 +16,9 @@ import org.springframework.web.bind.annotation.*;
 public class BasketController {
     private final BasketService basketService;
 
-    @GetMapping("/{userId}")
-    public BasketResponse getBasket(@PathVariable Long userId) {
-        BasketResponse basket = basketService.getBasket(userId);
-        return basket;
+    @GetMapping
+    public BasketResponse getBasket() {
+        return basketService.getBasket();
     }
 
     @PostMapping
@@ -26,14 +26,14 @@ public class BasketController {
         basketService.addItem(request);
     }
 
-    @PutMapping("/{userId}/{basketItemId}")
-    public void removeItem(@PathVariable Long userId, @PathVariable Long basketItemId) {
-        basketService.removeItem(userId, basketItemId);
+    @DeleteMapping("/{basketItemId}")
+    public void removeItem(@PathVariable Long basketItemId) {
+        basketService.removeItem(basketItemId);
     }
 
-    @PostMapping("/buy/{userId}/{basketId}")
-    public void buy(@PathVariable Long userId, @PathVariable Long basketId, @RequestBody CardRequest request) {
-        basketService.buy(basketId, userId, request);
+    @PostMapping("/buy/{basketId}")
+    public void buy(@PathVariable Long basketId, @Valid @RequestBody CardRequest request) {
+        basketService.buy(basketId, request);
     }
 
 }

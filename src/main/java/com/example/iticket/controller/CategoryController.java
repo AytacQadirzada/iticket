@@ -9,6 +9,7 @@ import com.example.iticket.service.concret.CategoryService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,17 +31,20 @@ public class CategoryController {
         return categoryService.getById(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createCategory(@RequestBody CategoryRequest request){
         categoryService.createCategory(request);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public void updateCategory(@PathVariable Long id, @RequestBody CategoryRequest request){
         categoryService.updateCategory(id,request);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteCategory(@PathVariable Long id){
         categoryService.deleteCategory(id);

@@ -26,7 +26,7 @@ public class TicketEntity {
     @JoinColumn(name = "sector_id")
     private SectorEntity sector;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "transaction_id")
     private TransactionEntity transaction;
 
@@ -34,15 +34,10 @@ public class TicketEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-
-
-
-//    private String paymentId;
-
     @OneToMany(cascade = CascadeType.ALL)
     private List<BasketItemEntity> basketItems;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "product_event_id")
     private ProductEventEntity productEvent;
 

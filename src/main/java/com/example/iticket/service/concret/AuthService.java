@@ -16,19 +16,19 @@ public interface AuthService {
 
     AuthResponse login(String email, String password);
 
-    boolean verifyOtp(String email, String otp);
+    boolean verifyOtp(String otp);
 
-    void generateOtp(String email);
+    void generateOtp();
 
-    void updateUser(Long id, UserRequest request);
+    void updateUser(UserRequest request);
 
-    void deleteUser(Long id);
+    void deleteUser();
 
-    UserResponse getUser(String email);
+    UserResponse getUser();
 
     void resetPassword(ResetPasswordRequest request);
 
-    void userBalanceIncrease(Long id, Double amount, CardRequest request);
+//    void userBalanceIncrease(Double amount, CardRequest request);
 
-    List<TicketResponse> myTickets(Long userId, Boolean before);
+    List<TicketResponse> myTickets();
     }

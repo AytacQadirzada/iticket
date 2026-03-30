@@ -27,13 +27,13 @@ public class HallEntity {
 //    @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
 //    private List<SectorEntity> sectors;
 
-    @OneToMany(mappedBy = "hall", fetch = FetchType.LAZY)
-    private Set<SectorEntity> sectors = new HashSet<>();
+    @OneToMany(mappedBy = "hall", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<SectorEntity> sectors;
 
 //    @OneToMany(mappedBy = "hall")
 //    private List<ProductEventEntity> productEvents;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "venue_id")
     private VenuesEntity venue;
 

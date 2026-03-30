@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
                         .findFirst()
                         .orElseThrow()
                         .getPrice();
-                if(sector.getRowNumber() !=0 && sector.getColumnNumber() !=0) {
+                if(sector.getRowNumber() !=0 && sector.getColumnNumber() !=0)   {
                         for (int i = 0; i < sector.getColumnNumber(); i++) {
                         for (int j=0; j<sector.getRowNumber(); j++) {
                             var ticket = new TicketEntity();

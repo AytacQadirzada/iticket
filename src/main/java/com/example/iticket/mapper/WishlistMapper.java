@@ -6,7 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+@Mapper(componentModel = "spring",
+        uses = ProductEventMapper.class, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
 public interface WishlistMapper {
 //    WishlistEntity toEntity(WishlistRequest request);
     WishlistResponse toResponse(WishlistEntity entity);

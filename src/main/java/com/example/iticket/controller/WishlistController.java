@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 public class WishlistController {
     private final WishlistService wishlistService;
 
-    @GetMapping("/{userId}")
-    public WishlistResponse getById(@PathVariable Long userId){
-        return wishlistService.getById(userId);
+    @GetMapping
+    public WishlistResponse getById(){
+        return wishlistService.getById();
     }
 
-    @PutMapping("/{userId}/{productId}")
-    public void addProduct(@PathVariable Long userId,@PathVariable Long productId){
-        wishlistService.addProduct(userId, productId);
+    @PutMapping("/{productId}")
+    public void addProduct(@PathVariable Long productId){
+        wishlistService.addProduct(productId);
     }
 }

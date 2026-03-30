@@ -32,19 +32,21 @@ public class VenuesController {
         return venuesService.getById(id);
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public void createVenues(@RequestBody VenuesRequest request){
         venuesService.createVenues(request);
     }
 
-    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("update/{id}")
     public void updateVenues(@PathVariable Long id, @RequestBody VenuesUpdateRequestDto request){
         venuesService.updateVenues(id,request);
     }
 
-    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("delete/{id}")
     public void deleteVenues(@PathVariable Long id){
         venuesService.deleteVenues(id);
     }

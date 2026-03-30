@@ -6,6 +6,7 @@ import com.example.iticket.dao.entity.SectorEntity;
 import com.example.iticket.dao.entity.VenuesEntity;
 import com.example.iticket.dao.repository.CategoryRepository;
 import com.example.iticket.dao.repository.HallRepository;
+import com.example.iticket.dao.repository.SectorRepository;
 import com.example.iticket.dao.repository.VenuesRepository;
 import com.example.iticket.exception.NotFoundException;
 import com.example.iticket.mapper.HallMapper;
@@ -24,7 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class VenuesServiceImpl implements VenuesService {
 
     private final VenuesRepository venuesRepository;
     private final HallRepository hallRepository;
+    private final SectorRepository sectorRepository;
     private final VenuesMapper venuesMapper;
     private final HallMapper hallMapper;
     private final SectorMapper sectorMapper;
@@ -63,11 +67,12 @@ public class VenuesServiceImpl implements VenuesService {
         log.info("ActionLog.createVenues.start name: {} ", venues.getName());
         var venuesEntity = venuesMapper.toEntity(venues);
         for(var hall : venuesEntity.getHalls()){
-            hall.setVenue(venuesEntity);
             for(var sector : hall.getSectors()){
                 sector.setHall(hall);
             }
+            hall.setVenue(venuesEntity);
         }
+
         venuesRepository.save(venuesEntity);
         log.info("ActionLog.createVenues.end name: {} ", venuesEntity.getName());
     }

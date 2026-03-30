@@ -6,6 +6,7 @@ import com.example.iticket.service.concret.ProductEventService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,14 +29,21 @@ public class ProductEventController {
     }
 
 
-    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("update/{id}")
     public void update(@PathVariable Long id, @RequestBody ProductEventRequest request){
         service.update(id,request);
     }
 
-    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("delete/{id}")
     public void deleteCategory(@PathVariable Long id){
         service.delete(id);
+    }
+
+    @GetMapping("/getAllByProductId/{productId}")
+    public List<ProductEventResponse> getAllByProductId(@PathVariable Long productId){
+        return service.getProductEventsByProductId(productId);
     }
 
 }

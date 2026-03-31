@@ -1,5 +1,6 @@
 package com.example.iticket.controller;
 
+import com.example.iticket.model.request.ForgotPasswordRequest;
 import com.example.iticket.model.request.RegisterUserRequest;
 import com.example.iticket.model.request.ResetPasswordRequest;
 import com.example.iticket.model.response.AuthResponse;

@@ -47,4 +47,9 @@ public class ProductController {
         service.delete(id);
     }
 
+    @GetMapping("/category/{categoryId}")
+    public List<ProductResponse> getAllByCategory(@PathVariable Long categoryId){
+        return service.getAllByCategory(categoryId);
+    }
+
 }

@@ -15,10 +15,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ResetPasswordRequest {
 
-        @NotBlank(message = "Email boş ola bilməz")
-        @Email(message = "Email düzgün formatda deyil")
-        private String email;
-
         @NotBlank(message = "Şifrə boş ola bilməz")
         @Size(min = 8, message = "Şifrə minimum 8 simvol olmalıdır")
         @Pattern(

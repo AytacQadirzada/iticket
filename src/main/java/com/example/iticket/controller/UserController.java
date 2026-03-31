@@ -49,7 +49,7 @@ public class UserController {
         return authService.verifyOtp(otp);
     }
 
-    @PutMapping("/forgot-password/reset")
+    @PutMapping("/reset-password")
     public void resetPassword(@RequestBody ResetPasswordRequest request){
         authService.resetPassword(request);
     }

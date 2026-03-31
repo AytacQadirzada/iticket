@@ -1,9 +1,6 @@
 package com.example.iticket.service.concret;
 
-import com.example.iticket.model.request.CardRequest;
-import com.example.iticket.model.request.RegisterUserRequest;
-import com.example.iticket.model.request.ResetPasswordRequest;
-import com.example.iticket.model.request.UserRequest;
+import com.example.iticket.model.request.*;
 import com.example.iticket.model.response.AuthResponse;
 import com.example.iticket.model.response.TicketResponse;
 import com.example.iticket.model.response.UserResponse;
@@ -27,8 +24,6 @@ public interface AuthService {
     UserResponse getUser();
 
     void resetPassword(ResetPasswordRequest request);
-
-//    void userBalanceIncrease(Double amount, CardRequest request);
 
     List<TicketResponse> myTickets();
     }

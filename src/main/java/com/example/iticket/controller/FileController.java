@@ -1,6 +1,7 @@
 package com.example.iticket.controller;
 
 import com.example.iticket.service.concret.MinioService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/v1/files")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class FileController {
 
     private final MinioService minioService;

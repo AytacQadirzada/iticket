@@ -13,10 +13,7 @@ import com.example.iticket.exception.NotMatchException;
 import com.example.iticket.exception.RegistrationException;
 import com.example.iticket.mapper.TicketMapper;
 import com.example.iticket.mapper.UserMapper;
-import com.example.iticket.model.request.CardRequest;
-import com.example.iticket.model.request.RegisterUserRequest;
-import com.example.iticket.model.request.ResetPasswordRequest;
-import com.example.iticket.model.request.UserRequest;
+import com.example.iticket.model.request.*;
 import com.example.iticket.model.response.AuthResponse;
 import com.example.iticket.model.response.TicketResponse;
 import com.example.iticket.model.response.UserResponse;
@@ -102,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
         if (verify) {
             user.setEmailVerified(true);
         }
-        userRepository.save(user);
+        userRepository.save (user);
         log.info("ActionLog.verifyOtp.end: email: {}", email);
         return verify;
     }
@@ -154,27 +151,31 @@ public class AuthServiceImpl implements AuthService {
             return new NotFoundException("User not found");
         });
         var userResponse = userMapper.toUserResponse(user);
+        userResponse.setEmailVerified(user.isEmailVerified());
         log.info("ActionLog.getUser.end email: {} ", email);
         return userResponse;
     }
 
     @Override
     public void resetPassword(ResetPasswordRequest request) {
-        log.info("ActionLog.resetPassword.start email: {} ", request.getEmail());
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> {
-            log.error("ActionLog.resetPassword.error User not found with email: {} ", request.getEmail());
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getName();
+        log.info("ActionLog.resetPassword.start email: {} ", email);
+        var user = userRepository.findByEmail(email).orElseThrow(() -> {
+            log.error("ActionLog.resetPassword.error User not found with email: {} ", email);
             return new NotFoundException("User not found");
         });
 
         if (!request.getNewPassword().equals(request.getPasswordConfirmation())) {
-            log.error("ActionLog.resetPassword.error password not equals: {} ", request.getEmail());
+            log.error("ActionLog.resetPassword.error password not equals: {} ", email);
             throw new NotMatchException("Passwords does not match");
         }
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
-        log.info("ActionLog.resetPassword.end email: {} ", request.getEmail());
+        log.info("ActionLog.resetPassword.end email: {} ", email);
 
     }
+
 //
 //    @Override
 //    public void userBalanceIncrease(Double amount, CardRequest request) {
